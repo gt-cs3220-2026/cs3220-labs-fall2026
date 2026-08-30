@@ -1,0 +1,41 @@
+# FP8 E4M3 (4%)
+
+The FP8 E4M3 spec is as follows:
+
+| Signal | I/O | Width | Functionality |
+| :--- | :--- | :--- | :--- |
+| i\_clk | Input | 1 | Clock signal |
+| i\_rst\_n | Input | 1 | Active low asynchronous reset |
+| i\_data\_a | Input | 8 | OCP FP8 E4M3 (1-4-3). No infinity; `S.1111.111` is NaN. We will not test NaN, Inf, or denorms. operand a |
+| i\_data\_b | Input | 8 | OCP FP8 E4M3 (1-4-3). No infinity; `S.1111.111` is NaN. We will not test NaN, Inf, or denorms. operand b |
+| i\_inst | Input | 2 | Instruction signal representing functions to be performed |
+| i\_valid | input | 1 | One clock signal when input data a and b are valid |
+| o\_data | Output | 8 | Calculation result |
+| o\_valid | Output | 1 | Should be **one cycle signal** when your results are valid |
+
+You are asked to implement the following functions:
+
+| i\_inst | Function | Description |
+| :--- | :--- | :--- |
+| 2'd0 | `Add` | i\_data\_a + i\_data\_b |
+| 2'd1 | `Mul` | i\_data\_a * i\_data\_b |
+| 2'd2 | `Div` | i\_data\_a / i\_data\_b |
+
+Format: **OCP FP8 E4M3 (1-4-3). No infinity; `S.1111.111` is NaN. We will not test NaN, Inf, or denorms.**. Bit fields are `sign[7]`, `exponent[3:0]`, `fraction[2:0]` packed into a 8-bit word.
+
+More details:
+*   We will compare the output data with provided answers.
+*   Follow the format above (IEEE-754 for FP32/FP16; BF16 is a 1-8-7 truncation of FP32; FP8 follows OCP E4M3).
+*   The inputs will not be denormal numbers, infinites, and NaNs, nor will the calculated result.
+*   Divide-by-zero is not tested.
+*   Simple testcases.
+*   During the computation, the one with smaller exponent will be shifted, you should keep the precision until rounding. As for rounding mode, we use default **rounding to nearest even**.
+    *   I find this [pdf](http://indico.ictp.it/event/7657/session/3/contribution/12/material/0/0.pdf) useful to explain the rounding and the GRS bits.
+    *   The testcases may be too easy to worry about the rounding.
+*   `o_valid` may come many cycles after `i_valid` for divide.
+
+You may want to reference the floating-point datapath diagram described in class.
+
+Grading:
+*   There are 10 test cases for `add`, `mul`, and `div`. Overall, there are 30 test cases.
+*   Each module is out of **4.0** (partial credit per passing vector).

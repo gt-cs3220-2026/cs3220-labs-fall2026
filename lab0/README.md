@@ -1,3 +1,3 @@
-## ***UNDER CONSTRUCTION***
+## ***RELEASED***
 
-Please come back at a later date!
+Please refer to the file contents for lab 0

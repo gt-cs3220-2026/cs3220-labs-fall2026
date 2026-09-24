@@ -10,7 +10,7 @@ module tb_direction (
   output wire [`BHR_WIDTH-1:0] history,
   output wire [`PHT_BITS-1:0] fetch_index, write_index,
   output wire prediction, bhr_write, pht_write, pht_data,
-  output wire [31:0] bhr_data
+  output wire bhr_data
 );
   pipeline dut (.clk(clk), .reset(reset));
   assign pc = dut.my_FE_stage.PC_FE_latch;
@@ -37,7 +37,7 @@ bind PHT task3_pht_probe pht_probe (.rd_sel(rd_sel), .out(out),
 module task3_bhr_probe (
   input wire [`BHR_WIDTH-1:0] out,
   input wire wr_ena,
-  input wire [31:0] wr_data
+  input wire wr_data
 );
   assign tb_direction.history = out;
   assign tb_direction.bhr_write = wr_ena;

@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
                 fetched.erase(found);
             }
             check("actual PC", next, dut.actual_pc);
-            check("BHR write data", taken, dut.bhr_data & 1);
+            check("BHR write data", taken, dut.bhr_data);
             check("PHT write data", taken, dut.pht_data);
         }
         check("redirect", redirect, dut.redirect);

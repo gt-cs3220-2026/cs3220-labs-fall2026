@@ -128,7 +128,7 @@ module BHR (
   input wire clk,
   input wire reset,
   input wire wr_ena,
-  input wire [`DBITS-1:0] wr_data,
+  input wire wr_data,
   output wire [`BHR_WIDTH-1:0] out
 );
 //TODO: Complete the BHR logic
@@ -139,7 +139,7 @@ endmodule
 module PHT (
   input wire clk,
   input wire reset,
-  input wire [`PHT_BITS-1:0] rd_sel,
+  input wire [`PHT_BITS-1:0] rd_sel, 
   output wire out,
   input wire [`PHT_BITS-1:0] wr_sel,
   input wire wr_data,

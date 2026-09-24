@@ -4,9 +4,11 @@
 #include <cstdlib>
 #include <cstdint>
 #include <verilated.h>
-#include "VBTB.h"
+#include "Vtb_btb.h"
 
-VBTB dut;
+double sc_time_stamp() { return 0; }
+
+Vtb_btb dut;
 struct Entry {
     bool valid;
     uint32_t tag;

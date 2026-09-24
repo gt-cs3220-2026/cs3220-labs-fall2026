@@ -3,9 +3,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <verilated.h>
-#include "VPHT.h"
+#include "Vtb_pht.h"
 
-VPHT dut;
+double sc_time_stamp() { return 0; }
+
+Vtb_pht dut;
 unsigned counters[256];
 
 void check() {

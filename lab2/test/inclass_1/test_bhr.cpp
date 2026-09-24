@@ -3,9 +3,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <verilated.h>
-#include "VBHR.h"
+#include "Vtb_bhr.h"
 
-VBHR dut;
+double sc_time_stamp() { return 0; }
+
+Vtb_bhr dut;
 unsigned history = 0;
 
 void check() {

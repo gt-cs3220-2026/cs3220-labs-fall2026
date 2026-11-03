@@ -17,9 +17,11 @@ In this lab, you will deploy your RISC-V processor on a Pynq board and deepen yo
 
 **Grading:**
 
-+ **Part 1: Deploy your RISC-V CPU on the Pynq Board**: 70 points
++ **Part 1 (In-Class): Deploy your RISC-V CPU on the Pynq Board**: 100 points
 
-+ **Part 2: Dispatch Instructions to Your Processor with AXI Lite**: 30 points
++ **Part 2 (Take-Home): Dispatch Instructions to Your Processor with AXI Lite**: 100 points
+
+The point distribution and grading weights for each part are determined by **Canvas**. Refer to the corresponding Canvas assignment for the official grading breakdown.
 
 ## Part-0: Environment Setup
 
@@ -40,7 +42,7 @@ Note: Environment setup may take some time. Please be patient. Remember, the ava
 
 ## Part-1: Deploy your RISC-V CPU on the Pynq Board
 
-In this part, you will deploy your RISC-V processor on a pynq board. The pynq board contains a [field programmable gate array (FPGA)](https://en.wikipedia.org/wiki/Field-programmable_gate_array), which allows you to program its hardware. You will be able to communicate with the board through AXI lite ports using a Jupyter notebook.
+In this part, you will deploy your RISC-V processor on a pynq board. The pynq board contains a [field programmable gate array (FPGA)](https://en.wikipedia.org/wiki/Field-programmable_gate_array), which allows you to program its hardware. You will be able to communicate with the board through AXI lite ports using either a Jupyter notebook or an SSH/Python script.
 
 ### Step-1: Vitis for Creating a Communication Adapter
 
@@ -147,41 +149,25 @@ The name and path may be different if you use different block design name, all t
 
 Make sure you rename all the files to have the same name (e.g. riscv.bit, riscv.tcl, riscv.hwh).
 
-### Step-3: Deploy on the Pynq Board
+### Step-3: Deploy and Verify on the Pynq Board
 
-#### [11] Upload the Files 
+Follow the current [CS3220 PYNQ Board Access Guide](https://docs.google.com/document/d/1Vgq4hqg2PBhlwCA1yLPD7siiIVJK4tD1NS8vMTlKJ7w/edit?tab=t.0). **Either verification method below is accepted.** Do not use the old Piazza post 140 instructions.
 
-Gather the three files specified earlier along with [riscv_test.ipynb](riscv_test.ipynb) into the same directory on the pynq server.  
+**Option A — Jupyter Notebook:** Upload the matching `riscv.bit`, `riscv.hwh`, and `riscv.tcl` files and [riscv_test.ipynb](riscv_test.ipynb) to the same PYNQ directory. Load the overlay and execute the notebook cells.
 
-#### [12] Running on the Pynq Board
+**Option B — SSH / Python:** Connect to the GT VPN, then obtain a PYNQ board through Slurm:
 
-Check this post https://piazza.com/class/mjxdf87xmug4h3/post/140
+```bash
+ssh <GT_USERNAME>@fry.cc.gatech.edu
+srun -p techfee -C pynq -N 1 --mem=200M --pty /bin/bash -l
+sudo -s
+source /usr/local/share/pynq-venv/bin/activate
+python riscv_test.py
+```
 
-Launch [riscv_test.ipynb](riscv_test.ipynb) within the designated Jupyter notebook environment and execute the code. The address 0x20 corresponds to `out1` and 0x30 to `out2`. The value at `out1` will continuously change, reflecting the cycle count, whereas the value at `out2` will display the static value from the 10th register.
+Transfer the matching `.bit`, `.hwh`, `.tcl`, and [riscv_test.py](riscv_test.py) to the allocated board and run the script from the same directory. If your board allocation or permissions prevent execution, contact the course staff or IT.
 
-*Please include a screenshot of the Jupyter notebook displaying the output.* 
-
-### Step-3: Deploy on the Pynq Board (Workaround)
-
-Check this post https://piazza.com/class/mjxdf87xmug4h3/post/140
-
-#### [13] SSH test and upload the file (This is just for uploading the files)
-
-Under GT VPN, `ssh [username]@pynq-z2-[1-50].cc.gatech.edu`
-- E.g. `ssh user@pynq-z2-23.cc.gatech.edu`, check whether you are able to access
-- `scp files user@pynq-z2-23.cc.gatech.edu:~/`, upload three files specified earlier with [riscv_test.py](riscv_test.py)
-
-*Please spread out usage of the PYNQ server to avoid unnecessary errors.*
-
-#### [14] Running on the Pynq Board
-
-**Needs to obtain Pynq board through slurm commands to have root access**
-- `ssh [username]@fry.cc.gatech.edu` under GT VPN
-- `srun -p techfee -C pynq -N 1 --mem=200M --pty /bin/bash -l` to get a pynq fpga
-- After getting the fpga, `sudo -s` switch to root, and `source /usr/local/share/pynq-venv/bin/activate` to get the python enviroment
-- Execute the code `python riscv_test.py`. The address 0x20 corresponds to `out1` and 0x30 to `out2`. The value at `out1` will continuously change, reflecting the cycle count, whereas the value at `out2` will display the static value from the 10th register.
-
-*Please include a screenshot of the terminal output displaying the output.*
+**Verification:** In the provided design, offset `0x20` reads `out1` (cycle count) and `0x30` reads `out2` (register `x10`). `out1` should change as cycles advance; `out2` shows the current value stored in `x10`. Capture **one screenshot** of the actual notebook or terminal output and briefly explain the observed values. The Student ID last-digit requirement applies to **Part 2**, not Part 1.
 
 ## Part-2: Dispatch Instructions to Your Processor with AXI Lite
 
@@ -198,22 +184,36 @@ Similar to Step-2 in Part-1, you will begin by adding a 32-bit input port to [pi
 
 The bitstream generation process for the revised RISC-V design mirrors that of Step-2 in Part-1. The only difference is that you now need to connect the newly added input port to the communication adapter.
 
-### Step-3: Deploy on the Pynq Board
+### Step-3: Deploy and Verify on the Pynq Board
 
-Follow the instructions from Part-1 to upload your design to the Pynq Board. Then, load your processor design using [riscv_test2.ipynb](riscv_test2.ipynb). (or [riscv_test2.py](riscv_test2.py) for workaround)
+Generate a **new, matching** `.bit`, `.hwh`, and `.tcl` set for the updated design, using a common base name (for example, `riscv2.bit`, `riscv2.hwh`, and `riscv2.tcl`). Follow the same [PYNQ Board Access Guide](https://docs.google.com/document/d/1Vgq4hqg2PBhlwCA1yLPD7siiIVJK4tD1NS8vMTlKJ7w/edit?tab=t.0) and choose **either** Jupyter with [riscv_test2.ipynb](riscv_test2.ipynb) or SSH/Python with [riscv_test2.py](riscv_test2.py), as described in Part 1. Run your test from the directory containing the matching overlay files.
 
-### Step-4: Dispatch Instructions to Your Processor
+### Step-4: Dispatch Instructions and Verify Your Student ID Digit
 
-After loading your processor design, you will be able to send arbitrary instructions through the newly added input port. Your task is to change the value of the 10th register to the last digit of your student ID, refer to this [online compiler](https://riscvasm.lucasteske.dev/#) to convert your assembly instruction into a binary code. The value of the 10th register can be accessed via `out2` from the Jupyter notebook.
+Write one or more valid RISC-V instructions through your new AXI-Lite instruction input so that **register `x10` (`out2`) equals the last decimal digit of your own GT Student ID**. You may use **any supported instruction or instruction sequence** that achieves the required result. Use this [online RISC-V assembler](https://riscvasm.lucasteske.dev/#) if needed to convert assembly to machine code.
+
+For example, if the last digit of your ID is `7`, `addi x10, x0, 7` (machine code `0x00700513`) is one possible instruction, and the expected `out2` is `7`.
+
+Modify the provided test notebook or Python script to write your instruction(s) to the **correct writable AXI-Lite register offset** found in your generated Vitis HLS register map, then read `out2`. The provided design uses offset `0x30` for `out2`; check the generated mapping if your adapter differs. **Writing the instruction alone is not enough:** confirm the processor actually executes it and the measured `x10` matches your required digit. Show the instruction(s), actual output, and expected digit in your verification screenshot. Do not include your complete Student ID in the screenshot or report.
 
 ## Submission Guideline
 
-**What to submit** 
+Submit **one ZIP for each part** to its corresponding Canvas assignment. The same PYNQ verification methods (Jupyter or SSH/Python) are accepted for both parts.
 
-+ **Part-1:** Submit a zip file containing your `.bit`, `.tcl`, and `.hwh` files along with a screenshot of the Jupyter notebook demonstrating the expected values from Step-3 of Part-1.
+**Part 1 — In-Class (100 points):**
 
-+ **Part-2:** Submit a zip file containing your .bit, .tcl, and `.hwh` files, plus a screenshot of the Jupyter notebook demonstrating the expected values from Step-4 of Part-2.
+1. **One screenshot** showing the complete Vivado Block Design and its connections.
+2. The three matching overlay files: `.bit`, `.hwh`, and `.tcl`.
+3. **One screenshot** of the actual PYNQ Jupyter notebook or terminal output showing `out1` and `out2`.
+4. A **brief explanation** of the observed cycle count and register `x10` results.
 
-**Grading policy** 
+**Part 2 — Take-Home (100 points):**
 
-You will receive full credit for each part if the submitted bitstream can be successfully deployed on the Pynq board and the provided screenshots accurately display the correct outputs.
+1. **One screenshot** showing the complete **updated** Vivado Block Design, including the new instruction input connection.
+2. The three matching **updated** overlay files: `.bit`, `.hwh`, and `.tcl`.
+3. Your **modified verification script** (`.py` or `.ipynb`) that sends the instruction(s) and reads the result.
+4. The **assembly instruction(s) and corresponding machine code** used in your test (include these in the report or clearly in the test script).
+5. **One screenshot** showing your actual PYNQ notebook or terminal result, demonstrating that `out2` (`x10`) equals the **last digit of your own GT Student ID**.
+6. A **short report** explaining which RTL, HLS communication adapter, Vivado connections, and verification code you modified, and how you confirmed successful execution. Do not include your full Student ID.
+
+**Grading policy:** Each part is graded out of **100 points**. The **official item weights and grading criteria are those posted on Canvas** for the respective assignment; the README does not override Canvas. A successful bitstream deployment by itself does not satisfy all submission requirements.
